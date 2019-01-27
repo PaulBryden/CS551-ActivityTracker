@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'AddGoalsPage.dart';
 import 'GlobDrawer.dart';
 
 class GoalPage extends StatefulWidget {
@@ -57,12 +59,23 @@ class _GoalPageState extends State<GoalPage> {
             Text(
               'Goal Page',
             ),
-
           ],
         ),
       ),
       drawer: GlobDrawer(),
-      // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddGoalsPage(title: "Add Goals Page"),
+            ),
+          );
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+        // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

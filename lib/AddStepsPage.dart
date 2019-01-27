@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'GlobDrawer.dart';
-import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 class AddStepsPage extends StatefulWidget {
   AddStepsPage({Key key, this.title}) : super(key: key);
 
@@ -67,32 +67,48 @@ class _AddStepsPageState extends State<AddStepsPage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            //
+            // The widget.
+            //
+            DateTimePickerFormField(
+              inputType: InputType.date,
+              format: formats[InputType.date],
+              editable: false,
+              decoration: InputDecoration(
+                  icon: Icon(Icons.date_range),
+                  labelText: 'Date',
+                  hasFloatingPlaceholder: false),
+              onChanged: (dt) => setState(() => date = dt),
+            ),
 
-          //
-          // The widget.
-          //
-          DateTimePickerFormField(
-            inputType: InputType.date,
-            format: formats[InputType.date],
-            editable: false,
-            decoration: InputDecoration(
-                labelText: 'Date', hasFloatingPlaceholder: false),
-            onChanged: (dt) => setState(() => date = dt),
-          ),
-
-          DateTimePickerFormField(
-            inputType: InputType.time,
-            format: formats[InputType.time],
-            editable: false,
-            decoration: InputDecoration(
-                labelText: 'Time', hasFloatingPlaceholder: false),
-            onChanged: (dt) => setState(() => time = dt),
-          ),
+            DateTimePickerFormField(
+              inputType: InputType.time,
+              format: formats[InputType.time],
+              editable: false,
+              decoration: InputDecoration(
+                  icon: Icon(Icons.access_time),
+                  labelText: 'Time',
+                  hasFloatingPlaceholder: false),
+              onChanged: (dt) => setState(() => time = dt),
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                icon: Icon(Icons.directions_walk),
+                hintText: '1000',
+                labelText: 'Steps *',
+              ),
+            ),
           ],
-
         ),
       ),
-       // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

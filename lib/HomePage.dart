@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'GlobDrawer.dart';
+
 import 'AddStepsPage.dart';
+import 'GlobDrawer.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
@@ -57,22 +59,24 @@ class _HomePageState extends State<HomePage> {
             Text(
               'Home Page',
             ),
-
           ],
         ),
       ),
       drawer: GlobDrawer(),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){ Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(
-            builder: (context) => AddStepsPage(title: "Add Steps Page"),
-          ),);},
+              builder: (context) => AddStepsPage(title: "Add Steps Page"),
+            ),
+          );
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-      // This trailing comma makes auto-formatting nicer for build methods.
+    // This trailing comma makes auto-formatting nicer for build methods.
     //);
   }
 }

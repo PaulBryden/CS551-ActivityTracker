@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'AddStepsPage.dart';
-import 'GlobDrawer.dart';
-
-class ActivityPage extends StatefulWidget {
-  ActivityPage({Key key, this.title}) : super(key: key);
+class AddGoalsPage extends StatefulWidget {
+  AddGoalsPage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -18,10 +15,10 @@ class ActivityPage extends StatefulWidget {
   final String title;
 
   @override
-  _ActivityPageState createState() => _ActivityPageState();
+  _AddGoalsPageState createState() => _AddGoalsPageState();
 }
 
-class _ActivityPageState extends State<ActivityPage> {
+class _AddGoalsPageState extends State<AddGoalsPage> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -56,21 +53,29 @@ class _ActivityPageState extends State<ActivityPage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Activity Page',
+            //
+            // The widget.
+            //
+            TextFormField(
+              decoration: const InputDecoration(
+                icon: Icon(Icons.text_format),
+                hintText: 'Default Goal',
+                labelText: 'Name *',
+              ),
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                icon: Icon(Icons.directions_walk),
+                hintText: '1000',
+                labelText: 'Steps *',
+              ),
             ),
           ],
         ),
       ),
-      drawer: GlobDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddStepsPage(title: "Add Steps Page"),
-            ),
-          );
+          Navigator.pop(context);
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),

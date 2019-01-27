@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'GlobDrawer.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -57,7 +58,6 @@ class _HistoryPageState extends State<HistoryPage> {
             Text(
               'History Page',
             ),
-
           ],
         ),
       ),

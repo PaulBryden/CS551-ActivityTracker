@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'ActivityPage.dart';
+import 'GoalPage.dart';
 import 'HomePage.dart';
 import 'SettingsPage.dart';
-import 'GoalPage.dart';
-class GlobDrawer extends Drawer {
 
+class GlobDrawer extends Drawer {
   GlobDrawer();
 
   @override

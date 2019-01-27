@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'GlobDrawer.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -57,7 +58,6 @@ class _SettingsPageState extends State<SettingsPage> {
             Text(
               'Settings Page',
             ),
-
           ],
         ),
       ),
