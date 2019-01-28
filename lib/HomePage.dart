@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'GaugeChart.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'AddStepsPage.dart';
 import 'GlobDrawer.dart';
 
@@ -57,12 +58,18 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Home Page',
+              '500/1000 steps',
             ),
+            new Container(
+              width: 300.0,
+              height: 300.0,
+              child: new GaugeChart(_createSampleData(), animate: true),
+            )
           ],
         ),
       ),
       drawer: GlobDrawer(),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -78,5 +85,22 @@ class _HomePageState extends State<HomePage> {
     );
     // This trailing comma makes auto-formatting nicer for build methods.
     //);
+  }
+
+  /// Create one series with sample hard coded data.
+  static List<charts.Series<GaugeSegment, String>> _createSampleData() {
+    final data = [
+      new GaugeSegment('Complete', 100),
+      new GaugeSegment('ToGo', 100),
+    ];
+
+    return [
+      new charts.Series<GaugeSegment, String>(
+        id: 'Segments',
+        domainFn: (GaugeSegment segment, _) => segment.segment,
+        measureFn: (GaugeSegment segment, _) => segment.size,
+        data: data,
+      )
+    ];
   }
 }

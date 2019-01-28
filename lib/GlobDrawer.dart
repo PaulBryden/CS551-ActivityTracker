@@ -20,6 +20,7 @@ class GlobDrawer extends Drawer {
         children: <Widget>[
           DrawerHeader(
             child: Text('Activity Tracker'),
+
             decoration: BoxDecoration(
               color: Colors.blue,
             ),

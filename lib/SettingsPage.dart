@@ -53,10 +53,25 @@ class _SettingsPageState extends State<SettingsPage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Settings Page',
+            new SwitchListTile(
+              value: true,
+              title: new Text('History Modification', style: new TextStyle(fontWeight: FontWeight.normal, color: Colors.black)),
+            ),
+
+            new SwitchListTile(
+              value: true,
+              title: new Text('Goal Modification', style: new TextStyle(fontWeight: FontWeight.normal, color: Colors.black)),
+            ),
+            new RaisedButton(
+              child: const Text('Clear History'),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              elevation: 4.0,
+              splashColor: Colors.blue,
+              onPressed: () {
+                // Perform some action
+              },
             ),
           ],
         ),

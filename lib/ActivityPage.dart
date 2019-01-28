@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:charts_flutter/flutter.dart' as charts;
+import 'GaugeChart.dart';
+import 'BarChart.dart';
 import 'AddStepsPage.dart';
 import 'GlobDrawer.dart';
 
@@ -36,10 +38,9 @@ class _ActivityPageState extends State<ActivityPage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body: ListView(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
           // Column is also layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -54,14 +55,64 @@ class _ActivityPageState extends State<ActivityPage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+
           children: <Widget>[
             Text(
-              'Activity Page',
+              '500/100 Steps',
+              textAlign: TextAlign.center,
+
             ),
-          ],
+            new Container(
+              width: 300.0,
+              height: 300.0,
+              child: new GaugeChart(_createSampleData(), animate: true),
+            ),
+        new Container(
+
+          width: 300.0,
+          height: 300.0,
+            child: SimpleBarChart.withSampleData(),
+
         ),
-      ),
+            new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: <Widget>[
+              new RaisedButton(
+              child: const Text('Day'),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              elevation: 4.0,
+              splashColor: Colors.blue,
+              onPressed: () {
+                // Perform some action
+              },
+            ),
+              new RaisedButton(
+                child: const Text('Month'),
+                color: Theme.of(context).accentColor,
+                textColor: Colors.white,
+                elevation: 4.0,
+                splashColor: Colors.blue,
+                onPressed: () {
+                  // Perform some action
+                },
+              ),
+              new RaisedButton(
+                child: const Text('Year'),
+                color: Theme.of(context).accentColor,
+                textColor: Colors.white,
+                elevation: 4.0,
+                splashColor: Colors.blue,
+                onPressed: () {
+                  // Perform some action
+                },
+              )]),
+
+          ],
+
+        ),
+
       drawer: GlobDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -77,5 +128,21 @@ class _ActivityPageState extends State<ActivityPage> {
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+  /// Create one series with sample hard coded data.
+  static List<charts.Series<GaugeSegment, String>> _createSampleData() {
+    final data = [
+      new GaugeSegment('Complete', 100),
+      new GaugeSegment('ToGo', 100),
+    ];
+
+    return [
+      new charts.Series<GaugeSegment, String>(
+        id: 'Segments',
+        domainFn: (GaugeSegment segment, _) => segment.segment,
+        measureFn: (GaugeSegment segment, _) => segment.size,
+        data: data,
+      )
+    ];
   }
 }
