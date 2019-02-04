@@ -1,8 +1,12 @@
-import 'package:flutter/material.dart';
-import 'GaugeChart.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'AddStepsPage.dart';
+import 'package:flutter/material.dart';
+
+import 'GaugeChart.dart';
 import 'GlobDrawer.dart';
+import 'GoalPage.dart';
+import 'UserData.dart';
+import 'package:intl/intl.dart';
+import 'Day.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -23,8 +27,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final textController = TextEditingController();
+  var dataInst = new UserData();
+  var now = new DateTime.now();
+  var formatter = new DateFormat('yyyy-MM-dd');
   @override
   Widget build(BuildContext context) {
+    Day currentDay = dataInst.getDay(formatter.format(now));
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -37,10 +46,7 @@ class _HomePageState extends State<HomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
+      body: ListView(
           // Column is also layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -55,43 +61,77 @@ class _HomePageState extends State<HomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          padding: EdgeInsets.all(10),
           children: <Widget>[
-            Text(
-              '500/1000 steps',
-            ),
+            ListTile(
+                leading: const Icon(Icons.golf_course),
+                title:  Text(currentDay.goal.name),
+                subtitle:  Text(currentDay.goal.target.toString()),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GoalPage(title: "Goals",currentDay: currentDay),
+                    ),
+                  );
+                  /* react to the tile being tapped */
+                }),
             new Container(
-              width: 300.0,
-              height: 300.0,
-              child: new GaugeChart(_createSampleData(), animate: true),
-            )
-          ],
-        ),
-      ),
+              height: 250,
+              child:
+                  new GaugeChart(_createSampleData(currentDay),currentDay.steps,currentDay.goal.target, animate: true),
+            ),
+            TextFormField(
+              controller: textController,
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please enter a number';
+                }
+              },
+              decoration: InputDecoration(
+                hintText: currentDay.goal.target.toString(),
+                labelText: "Steps:" + currentDay.steps.toString(),
+              ),
+            ),
+            new RaisedButton(
+              child: const Text('Add'),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              elevation: 4.0,
+              splashColor: Colors.blue,
+              onPressed: ()
+              {
+                incrementSteps(dataInst,currentDay);
+              },
+            ),
+          ]),
+
       drawer: GlobDrawer(),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddStepsPage(title: "Add Steps Page"),
-            ),
-          );
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
     // This trailing comma makes auto-formatting nicer for build methods.
     //);
   }
 
+  void incrementSteps(UserData userData, Day day)
+  {
+    day.steps+=int.parse(textController.text);
+    userData.updateDay(day);
+
+
+      setState(() => this.didChangeDependencies());
+
+
+  }
+
   /// Create one series with sample hard coded data.
-  static List<charts.Series<GaugeSegment, String>> _createSampleData() {
+  static List<charts.Series<GaugeSegment, String>> _createSampleData(
+      Day currentDay) {
     final data = [
-      new GaugeSegment('Complete', 100),
-      new GaugeSegment('ToGo', 100),
+      new GaugeSegment('Complete', (currentDay.goal.target-currentDay.steps)>0?(currentDay.goal.target-currentDay.steps):0),
+      new GaugeSegment('ToGo', currentDay.steps),
     ];
 
     return [

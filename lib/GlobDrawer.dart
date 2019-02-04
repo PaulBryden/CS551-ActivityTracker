@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ActivityPage.dart';
-import 'GoalPage.dart';
+import 'HistoryPage.dart';
 import 'HomePage.dart';
 import 'SettingsPage.dart';
 
@@ -20,7 +19,6 @@ class GlobDrawer extends Drawer {
         children: <Widget>[
           DrawerHeader(
             child: Text('Activity Tracker'),
-
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
@@ -31,13 +29,13 @@ class GlobDrawer extends Drawer {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(title: "Home Page"),
+                  builder: (context) => HomePage(title: "Home"),
                 ),
               );
             },
           ),
           ListTile(
-            title: Text('Activity'),
+            title: Text('History'),
             onTap: () {
               // Update the state of the app
               // ...
@@ -45,21 +43,7 @@ class GlobDrawer extends Drawer {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ActivityPage(title: "Activity Page"),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: Text('Goals'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => GoalPage(title: "Goals Page"),
+                  builder: (context) => HistoryPage(title: "History"),
                 ),
               );
             },
@@ -73,7 +57,7 @@ class GlobDrawer extends Drawer {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingsPage(title: "Settings Page"),
+                  builder: (context) => SettingsPage(title: "Settings"),
                 ),
               );
             },

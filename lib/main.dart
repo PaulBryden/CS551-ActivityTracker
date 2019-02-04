@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'HomePage.dart';
+import 'UserData.dart';
 
-void main() => runApp(MyApp());
+void main() =>  test().then((_)=>runApp(MyApp()));
+var s1 = new UserData();
+
+Future<int> test() async {
+  await s1.loadAllData();
+  return 0;
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    test();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

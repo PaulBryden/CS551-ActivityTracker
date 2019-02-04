@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'UserData.dart';
+import 'Goal.dart';
 class AddGoalsPage extends StatefulWidget {
   AddGoalsPage({Key key, this.title}) : super(key: key);
 
@@ -19,6 +20,10 @@ class AddGoalsPage extends StatefulWidget {
 }
 
 class _AddGoalsPageState extends State<AddGoalsPage> {
+  final nameController = TextEditingController();
+  final targetController = TextEditingController();
+  var dataInst = new UserData();
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -37,26 +42,13 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             //
             // The widget.
             //
             TextFormField(
+              controller: nameController,
               decoration: const InputDecoration(
                 icon: Icon(Icons.text_format),
                 hintText: 'Default Goal',
@@ -64,6 +56,8 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
               ),
             ),
             TextFormField(
+              controller: targetController,
+              keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 icon: Icon(Icons.directions_walk),
                 hintText: '1000',
@@ -74,7 +68,10 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: ()
+        {
+          Goal goal = new Goal(nameController.text,int.parse(targetController.text));
+          dataInst.addGoal(goal);
           Navigator.pop(context);
         },
         tooltip: 'Increment',

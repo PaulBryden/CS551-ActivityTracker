@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'GlobDrawer.dart';
 
-class SettingsPage extends StatefulWidget {
-  SettingsPage({Key key, this.title}) : super(key: key);
+class HistoryPage extends StatefulWidget {
+  HistoryPage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -17,10 +17,10 @@ class SettingsPage extends StatefulWidget {
   final String title;
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  _HistoryPageState createState() => _HistoryPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -53,28 +53,10 @@ class _SettingsPageState extends State<SettingsPage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new SwitchListTile(
-              value: true,
-              title: new Text('History Modification',
-                  style: new TextStyle(
-                      fontWeight: FontWeight.normal, color: Colors.black)),
-            ),
-            new SwitchListTile(
-              value: true,
-              title: new Text('Goal Modification',
-                  style: new TextStyle(
-                      fontWeight: FontWeight.normal, color: Colors.black)),
-            ),
-            new RaisedButton(
-              child: const Text('Clear History'),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              elevation: 4.0,
-              splashColor: Colors.blue,
-              onPressed: () {
-                // Perform some action
-              },
+            Text(
+              'History Page',
             ),
           ],
         ),
