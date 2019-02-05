@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'UserData.dart';
 import 'GlobDrawer.dart';
-
+import 'Days.dart';
+import 'Day.dart';
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key, this.title}) : super(key: key);
 
@@ -21,7 +22,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  @override
+  var dataInst = new UserData();
+  final snackBar = SnackBar(
+      content: Text('Cleared History'));
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();  @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -30,6 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -55,13 +60,18 @@ class _SettingsPageState extends State<SettingsPage> {
           // horizontal).
           children: <Widget>[
             new SwitchListTile(
-              value: true,
+              value: dataInst.settings.historyMod,
+              onChanged: (bool value) { setState(() { dataInst.settings.historyMod=value; dataInst.writeFile("settings"); }); },
+
               title: new Text('History Modification',
                   style: new TextStyle(
                       fontWeight: FontWeight.normal, color: Colors.black)),
             ),
             new SwitchListTile(
-              value: true,
+              value: dataInst.settings.goalMod,
+              onChanged: (bool value) { setState(() {
+                value: dataInst.settings.goalMod=value; dataInst.writeFile("settings"); }); },
+
               title: new Text('Goal Modification',
                   style: new TextStyle(
                       fontWeight: FontWeight.normal, color: Colors.black)),
@@ -73,10 +83,14 @@ class _SettingsPageState extends State<SettingsPage> {
               elevation: 4.0,
               splashColor: Colors.blue,
               onPressed: () {
-                // Perform some action
-              },
+                dataInst.days = new Days(new List<Day>());
+                dataInst.writeFile("days");
+                _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text("Cleared History")));
+              }
             ),
+
           ],
+
         ),
       ),
       drawer: GlobDrawer(),

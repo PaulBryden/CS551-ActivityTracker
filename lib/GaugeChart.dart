@@ -15,7 +15,7 @@ class GaugeChart extends StatelessWidget {
     return new charts.PieChart(seriesList,
         animate: animate,
         behaviors: [
-          new charts.ChartTitle(((stepCount/goal)*100).toString()+"%",
+          new charts.ChartTitle((((stepCount/goal)*100).round().toString())+"%",
               behaviorPosition: charts.BehaviorPosition.bottom,
               titleOutsideJustification: charts.OutsideJustification.middle,
               // Set a larger inner padding than the default (10) to avoid

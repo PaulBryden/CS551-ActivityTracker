@@ -25,8 +25,8 @@ class GoalPage extends StatefulWidget {
 }
 
 class _GoalPageState extends State<GoalPage> {
-  int _act = 1;
   var dataInst = new UserData();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();  @override
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -36,6 +36,7 @@ class _GoalPageState extends State<GoalPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      key:_scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -60,27 +61,54 @@ class _GoalPageState extends State<GoalPage> {
           final item = dataInst.goals.goals[index];
 
           if (item.name == widget.currentDay.goal.name) {
-            return ListTile(
-                leading: const Icon(Icons.golf_course),
-                title: Text(widget.currentDay.goal.name),
-                subtitle: Text(widget.currentDay.goal.target.toString()));
-
-            }
-            else {
-            return ListTile(
-              title: Text(item.name),
-              subtitle: Text(item.target.toString()),
-                onTap: ()
-                {
-                  widget.currentDay.goal.name=item.name;
-                  widget.currentDay.goal.target=item.target;
-                  dataInst.updateDay(widget.currentDay);
-                  setState(() => this.didChangeDependencies());
-                  /* react to the tile being tapped */
-                });
+              return ListTile(
+                  leading: const Icon(Icons.golf_course),
+                  title: Text(widget.currentDay.goal.name),
+                  subtitle: Text(widget.currentDay.goal.target.toString()));
           }
-        },
-      )),
+          else {
+            return Dismissible(
+              // Each Dismissible must contain a Key. Keys allow Flutter to
+              // uniquely identify Widgets.
+                key: Key(item.name),
+                background: Container(color: Colors.red),
+                // We also need to provide a function that will tell our app
+                // what to do after an item has been swiped away.
+                onDismissed: (direction) {
+                  // Remove the item from our data source.
+                  setState(() {
+                    dataInst.removeGoal(item);
+                  });
+
+                  // Show a snackbar! This snackbar could also contain "Undo" actions.
+                  Scaffold
+                      .of(context)
+                      .showSnackBar(
+                      SnackBar(content: Text(item.name + "deleted")));
+                },
+                child: ListTile(
+                    title: Text(item.name),
+                    subtitle: Text(item.target.toString()),
+                    onTap: () {
+
+                      if(dataInst.settings.goalMod)
+                      {
+                        widget.currentDay.goal.name = item.name;
+                        widget.currentDay.goal.target = item.target;
+                        dataInst.updateDay(widget.currentDay);
+                        setState(() => this.didChangeDependencies());
+                      }
+                      else
+                        {
+                          _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text("Goal Modification Disabled")));
+
+                        }
+                      /* react to the tile being tapped */
+                    }),
+
+            );
+          }
+        })),
       drawer: GlobDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

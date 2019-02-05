@@ -39,6 +39,7 @@ class _HistoryPageState extends State<HistoryPage> {
   var dataInst = new UserData();
   var now = new DateTime.now();
   var formatter = new DateFormat('yyyy-MM-dd');
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();  @override
   @override
   Widget build(BuildContext context) {
     Day currentDay = dataInst.getDay(formatter.format(now));
@@ -49,6 +50,7 @@ class _HistoryPageState extends State<HistoryPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -85,7 +87,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   /* react to the tile being tapped */
                 }),
             new Container(
-              height: 250,
+              height: 245,
               child:
               new GaugeChart(_createSampleData(currentDay),currentDay.steps,currentDay.goal.target, animate: true),
             ),DateTimePickerFormField(
@@ -100,19 +102,26 @@ class _HistoryPageState extends State<HistoryPage> {
               onChanged: (dt) => setState(() => now=dt),
 
             ),
-            TextFormField(
-              controller: textController,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter a number';
-                }
-              },
-              decoration: InputDecoration(
-                hintText: currentDay.goal.target.toString(),
-                labelText: "Steps:" + currentDay.steps.toString(),
-              ),
-            ),
+            new Row(
+    children: <Widget>[
+                new Flexible(
+                  child: new
+                TextFormField(
+
+                controller: textController,
+          keyboardType: TextInputType.number,
+          validator: (value) {
+          if (value.isEmpty) {
+          return 'Please enter a number';
+          }
+          },
+          decoration: InputDecoration(
+            icon: Icon(Icons.directions_walk),
+            hintText: currentDay.goal.target.toString(),
+          labelText: "Steps:" + currentDay.steps.toString(),
+          ),
+          ),
+                ),
             new RaisedButton(
               child: const Text('Add'),
               color: Theme.of(context).accentColor,
@@ -121,9 +130,16 @@ class _HistoryPageState extends State<HistoryPage> {
               splashColor: Colors.blue,
               onPressed: ()
               {
-                incrementSteps(dataInst,currentDay);
+                if(dataInst.settings.historyMod || !DateTime(now.year,now.month,now.day).isBefore(DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day)))
+                {
+                  incrementSteps(dataInst, currentDay);
+                }
+                else
+                {
+                  _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text("History Modification Disabled")));
+                }
               },
-            ),
+            )]),
           ]),
 
       drawer: GlobDrawer(),

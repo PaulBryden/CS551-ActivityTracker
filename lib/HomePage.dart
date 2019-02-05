@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                   /* react to the tile being tapped */
                 }),
             new Container(
-              height: 250,
+              height: 245,
               child:
                   new GaugeChart(_createSampleData(currentDay),currentDay.steps,currentDay.goal.target, animate: true),
             ),
