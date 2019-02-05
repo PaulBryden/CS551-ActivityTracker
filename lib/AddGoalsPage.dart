@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'UserData.dart';
 import 'Goal.dart';
 class AddGoalsPage extends StatefulWidget {
-  AddGoalsPage({Key key, this.title}) : super(key: key);
+  AddGoalsPage({Key key, this.title, this.name, this.target, this.enableName}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -14,18 +14,29 @@ class AddGoalsPage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-
+  String name;
+  int target;
+  bool enableName;
   @override
-  _AddGoalsPageState createState() => _AddGoalsPageState();
+  _AddGoalsPageState createState() => _AddGoalsPageState(name,target);
+
+
 }
 
 class _AddGoalsPageState extends State<AddGoalsPage> {
-  final nameController = TextEditingController();
-  final targetController = TextEditingController();
   var dataInst = new UserData();
-
+  String valString;
+  int targetVal;
+  final nameController= TextEditingController();
+  final targetController = TextEditingController();
+  _AddGoalsPageState(this.valString,this.targetVal)
+  {
+    nameController.text=(valString);
+    targetController.text=(targetVal.toString());
+  }  //constructor
   @override
   Widget build(BuildContext context) {
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -49,6 +60,8 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
             //
             TextFormField(
               controller: nameController,
+              enabled: widget.enableName,
+              
               decoration: const InputDecoration(
                 icon: Icon(Icons.text_format),
                 hintText: 'Default Goal',
@@ -58,6 +71,7 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
             TextFormField(
               controller: targetController,
               keyboardType: TextInputType.number,
+
               decoration: const InputDecoration(
                 icon: Icon(Icons.directions_walk),
                 hintText: '1000',
@@ -71,7 +85,7 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
         onPressed: ()
         {
           Goal goal = new Goal(nameController.text,int.parse(targetController.text));
-          dataInst.addGoal(goal);
+          dataInst.updateGoal(goal);
           Navigator.pop(context);
         },
         tooltip: 'Increment',
@@ -79,5 +93,17 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
+
+  }
+  void updateName()
+  {
+    widget.name="${nameController.text}";
+
+  }
+  void updateTarget()
+  {
+
+    widget.target=int.parse("${targetController.text}");
+
   }
 }

@@ -123,12 +123,18 @@ class UserData {
   }
 
   void updateGoal(goalVar) async {
+    bool found=false;
     for (var eGoal in goals.goals) {
-      if (eGoal.name == goalVar.name) {
-        eGoal = goalVar;
+      if (eGoal.name.compareTo(goalVar.name)==0) {
+        eGoal.target = goalVar.target;
+        found=true;
         break;
       }
     }
+    if(!found)
+      {
+        addGoal(goalVar);
+      }
     await writeFile("goals");
   }
 

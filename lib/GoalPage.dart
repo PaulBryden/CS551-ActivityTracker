@@ -40,7 +40,6 @@ class _GoalPageState extends State<GoalPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          tooltip: 'Air it',
           onPressed:() {
             Navigator.pop(context);
           },
@@ -104,6 +103,14 @@ class _GoalPageState extends State<GoalPage> {
 
                         }
                       /* react to the tile being tapped */
+                    },
+                    onLongPress : (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddGoalsPage(title: "Add Goals Page", name: item.name, target: item.target,enableName: false),
+                        ),
+                      );
                     }),
 
             );
@@ -115,7 +122,7 @@ class _GoalPageState extends State<GoalPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddGoalsPage(title: "Add Goals Page"),
+              builder: (context) => AddGoalsPage(title: "Add Goals Page",name: "DEFAULT",target: 0, enableName:true),
             ),
           );
         },
