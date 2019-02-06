@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-import 'HomePage.dart';
+import 'ActivityPage.dart';
 import 'UserData.dart';
+import 'package:intl/intl.dart';
 
 void main() =>  test().then((_)=>runApp(MyApp()));
 var s1 = new UserData();
@@ -12,6 +14,7 @@ Future<int> test() async {
 }
 
 class MyApp extends StatelessWidget {
+  var formatter = new DateFormat('yyyy-MM-dd');
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Home Page'),
+      home: HomePage(title: 'Home',isHome: true, datetimePage: formatter.format(DateTime.now())),
     );
   }
 }

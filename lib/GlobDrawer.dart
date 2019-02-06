@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'HistoryPage.dart';
-import 'HomePage.dart';
+import 'ActivityPage.dart';
 import 'SettingsPage.dart';
 
 class GlobDrawer extends Drawer {
@@ -29,7 +30,7 @@ class GlobDrawer extends Drawer {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(title: "Home"),
+                  builder: (context) => HomePage(datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()),title:  'Home',isHome: true),
                 ),
               );
             },
