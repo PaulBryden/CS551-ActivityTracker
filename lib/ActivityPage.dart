@@ -7,6 +7,9 @@ import 'GoalPage.dart';
 import 'UserData.dart';
 import 'package:intl/intl.dart';
 import 'Day.dart';
+import 'Goals.dart';
+import 'Goal.dart';
+import 'DayState.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.datetimePage, this.isHome})
@@ -34,10 +37,16 @@ class _HomePageState extends State<HomePage> {
   var dataInst = new UserData();
   var now = new DateTime.now();
   var formatter = new DateFormat('yyyy-MM-dd');
+  Day currentDay;
+  List<Goal> _currGoals;
+  String selectedGoal;
+  List<DropdownMenuItem<String>> _dropDownGoals;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    Day currentDay = dataInst.getDay(widget.datetimePage);
+    currentDay = dataInst.getDay(widget.datetimePage);
+    selectedGoal = currentDay.goal.name;
+    _dropDownGoals = getDropDownMenuCurrencyItems();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -59,78 +68,90 @@ class _HomePageState extends State<HomePage> {
           : AppBar(
               title: Text(widget.title),
             ),
-      body: ListView(
-          padding: EdgeInsets.all(10),
-          children: <Widget>[
-            new Container(
-              child: new ListTile(
-                  leading: const Icon(Icons.golf_course),
-                  title: Text(currentDay.goal.name),
-                  subtitle: Text(currentDay.goal.target.toString()),
-                  onTap: () {
-                    if (!DateTime.parse(widget.datetimePage).isBefore(DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day))) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              GoalPage(title: "Goals", currentDay: currentDay),
-                        ),
-                      );
-                      /* react to the tile being tapped */
-                    }
-                  }),
-              color: Color.alphaBlend(Colors.black12, Colors.white),
-            ),
-            new Container(
-              height: 245,
-              child: new GaugeChart(_createSampleData(currentDay),
-                  currentDay.steps, currentDay.goal.target, 0,
-                  animate: true),
-            ),
-            TextFormField(
-              controller: textController,
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter a number';
-                }
-              },
-              decoration: InputDecoration(
-                hintText: currentDay.goal.target.toString(),
-                labelText: "Steps:" + currentDay.steps.toString(),
-              ),
-            ),
-            new RaisedButton(
-              child: const Text('Add'),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              elevation: 4.0,
-              splashColor: Colors.blue,
-              onPressed: () {
-                if (dataInst.settings.historyMod ||
-                    !DateTime.parse(widget.datetimePage).isBefore(DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day))) {
-                  incrementSteps(dataInst, currentDay);
-                } else {
-                  _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                      content: new Text("History Modification Disabled")));
-                }
-              },
-            ),
-          ]),
+      body: ListView(padding: EdgeInsets.all(10), children: <Widget>[
+        new Column(children: <Widget>[
+          !DateTime.parse(widget.datetimePage).isBefore(DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              DateTime.now().day))||currentDay.state==DayState.NoGoal?
+          new DropdownButton(
+            value: selectedGoal,
+            items: _dropDownGoals,
+            onChanged: changedDropDownItem
+          ):
+         new Row(mainAxisAlignment: MainAxisAlignment.center,children : <Widget>[currentDay.state==DayState.ModifiedGoal?new Icon(Icons.edit,size: 15,):new Container(),new  Icon(Icons.golf_course,size: 25,),
+          new Text(currentDay.goal.name),
+          new Text(" - "+currentDay.goal.target.toString()+" Steps")])]),
+        new Container(
+          height: 245,
+          child: currentDay.state != 0
+              ? new GaugeChart(_createSampleData(currentDay), currentDay.steps,
+                  currentDay.goal.target, 0,
+                  animate: true)
+              : new Text("Please choose a goal."),
+        ),
+      new Row(
+        children: <Widget>[
+      new Flexible(
+      child: new
+        TextFormField(
+          controller: textController,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: currentDay.goal.target.toString(),
+            labelText: "Steps:" + currentDay.steps.toString(),
+          ),
+        )),
+        new Container(
+          height:30,
+          margin: EdgeInsets.fromLTRB(5, 15, 0, 0),
+          child:
+        new FlatButton(
+
+          child: const Text('Add'),
+          color: Theme.of(context).accentColor,
+          textColor: Colors.white,
+          splashColor: Colors.blue,
+          onPressed: () {
+            if (dataInst.settings.historyMod ||
+                !DateTime.parse(widget.datetimePage).isBefore(DateTime(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    DateTime.now().day))) {
+              incrementSteps(dataInst, currentDay);
+            } else {
+              _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                  content: new Text("History Modification Disabled")));
+            }
+          },
+        ))]),
+      ]),
     );
     //);
   }
 
   void incrementSteps(UserData userData, Day day) {
+
+    try{
+      int.parse(textController.text);
+    }
+    catch(e)
+    {
+      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+          content: new Text("Please enter a valid, positive step count.")));
+      return;
+
+    }
+    if(int.parse(textController.text)<0)
+    {
+      _scaffoldKey.currentState.showSnackBar(new SnackBar(
+          content: new Text("Please enter a valid, positive step count.")));
+      return;
+    }
     day.steps += int.parse(textController.text);
     userData.updateDay(day);
-
+    FocusScope.of(context).requestFocus(new FocusNode());
+    textController.text="";
     setState(() => this.didChangeDependencies());
   }
 
@@ -154,5 +175,33 @@ class _HomePageState extends State<HomePage> {
         data: data,
       )
     ];
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuCurrencyItems() {
+    _currGoals = dataInst.getGoals();
+    List<String> currGoalsNames = new List<String>();
+    if (currentDay.state == DayState.NoGoal) {
+      currGoalsNames.add("No Goal Selected");
+    }
+    for (Goal element in _currGoals) {
+      currGoalsNames.add(element.name);
+      print(element.name);
+    }
+    List<DropdownMenuItem<String>> items = new List();
+    for (String element in currGoalsNames) {
+      items.add(new DropdownMenuItem(value: element, child: new Row(children : <Widget>[
+        currentDay.state==DayState.ModifiedGoal?new Icon(Icons.edit,size: 15,):new Container(),new  Icon(Icons.golf_course,size: 25,),
+          new Text(element),
+        new Text(" - "+dataInst.getGoal(element).target.toString()+" Steps")])));
+    }
+    return items;
+                            }
+
+  void changedDropDownItem(String selectedGoal) {
+    setState(() {
+      currentDay.goal = dataInst.getGoal(selectedGoal);
+      currentDay.state = currentDay.state==DayState.SelectedGoal||currentDay.state==DayState.ModifiedGoal?DayState.ModifiedGoal:DayState.SelectedGoal;
+      dataInst.updateDay(currentDay);
+    });
   }
 }

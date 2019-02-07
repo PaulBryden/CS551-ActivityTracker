@@ -63,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
               value: dataInst.settings.historyMod,
               onChanged: (bool value) { setState(() { dataInst.settings.historyMod=value; dataInst.writeFile("settings"); }); },
 
-              title: new Text('History Modification',
+              title: new Text('History Editing',
                   style: new TextStyle(
                       fontWeight: FontWeight.normal, color: Colors.black)),
             ),
@@ -72,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onChanged: (bool value) { setState(() {
                 value: dataInst.settings.goalMod=value; dataInst.writeFile("settings"); }); },
 
-              title: new Text('Goal Modification',
+              title: new Text('Goal Editing',
                   style: new TextStyle(
                       fontWeight: FontWeight.normal, color: Colors.black)),
             ),

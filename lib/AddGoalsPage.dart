@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'UserData.dart';
 import 'Goal.dart';
 class AddGoalsPage extends StatefulWidget {
-  AddGoalsPage({Key key, this.title, this.name, this.target, this.enableName}) : super(key: key);
+  AddGoalsPage({Key key, this.title, this.name, this.target, this.isEdit}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -16,7 +16,7 @@ class AddGoalsPage extends StatefulWidget {
   final String title;
   String name;
   int target;
-  bool enableName;
+  bool isEdit;
   @override
   _AddGoalsPageState createState() => _AddGoalsPageState(name,target);
 
@@ -29,6 +29,7 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
   int targetVal;
   final nameController= TextEditingController();
   final targetController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   _AddGoalsPageState(this.valString,this.targetVal)
   {
     nameController.text=(valString);
@@ -44,6 +45,7 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -60,7 +62,7 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
             //
             TextFormField(
               controller: nameController,
-              enabled: widget.enableName,
+              enabled: true,
               
               decoration: const InputDecoration(
                 icon: Icon(Icons.text_format),
@@ -82,11 +84,30 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()
-        {
-          Goal goal = new Goal(nameController.text,int.parse(targetController.text));
-          dataInst.updateGoal(goal);
-          Navigator.pop(context);
+        onPressed: () {
+          Goal goal = new Goal(
+              nameController.text, int.parse(targetController.text));
+          if(widget.isEdit)
+            {
+              if(widget.name!=nameController.text&& dataInst.getGoal(nameController.text).name!="No Goal Selected"){
+                _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                    content: new Text("Another Goal already exists with that name.")));
+              }
+              else {
+                dataInst.updateGoal(
+                    new Goal(widget.name, widget.target), goal);
+                Navigator.pop(context);
+              }
+            }
+            else{
+            if(dataInst.getGoal(nameController.text).name!="No Goal Selected"){
+              _scaffoldKey.currentState.showSnackBar(new SnackBar(
+                  content: new Text("Goal already exists with that name.")));
+            }else{
+              dataInst.addGoal(goal);
+              Navigator.pop(context);
+            }
+          }
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),

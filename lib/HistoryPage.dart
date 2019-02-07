@@ -8,7 +8,7 @@ import 'GlobDrawer.dart';
 import 'GoalPage.dart';
 import 'Day.dart';
 import 'UserData.dart';
-import 'package:flutter_calendar/flutter_calendar.dart';
+import 'flutter_calendar.dart';
 
 class HistoryPage extends StatefulWidget {
   HistoryPage({Key key, this.title}) : super(key: key);

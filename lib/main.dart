@@ -14,11 +14,9 @@ Future<int> test() async {
 }
 
 class MyApp extends StatelessWidget {
-  var formatter = new DateFormat('yyyy-MM-dd');
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    test();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -33,7 +31,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Home',isHome: true, datetimePage: formatter.format(DateTime.now())),
+      home: HomePage(datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()),title:  'Summary',isHome: true),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'Day.dart';
 import 'package:intl/intl.dart';
 
 class GoalPage extends StatefulWidget {
-  GoalPage({Key key, this.title, this.currentDay}) : super(key: key);
+  GoalPage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -28,11 +28,10 @@ class GoalPage extends StatefulWidget {
 class _GoalPageState extends State<GoalPage> {
   var dataInst = new UserData();
   var formatter = new DateFormat('yyyy-MM-dd');
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
-  @override
   Widget build(BuildContext context) {
+    widget.currentDay=dataInst.getDay(formatter.format(DateTime.now()));
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -42,12 +41,6 @@ class _GoalPageState extends State<GoalPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
@@ -63,34 +56,13 @@ class _GoalPageState extends State<GoalPage> {
               itemBuilder: (context, index) {
                 final item = dataInst.goals.goals[index];
 
-                if (item.name == widget.currentDay.goal.name) {
+                if (item.name == widget.currentDay.goal.name || !dataInst.settings.goalMod) {
                   return ListTile(
-                      leading: const Icon(Icons.golf_course),
-                      title: Text(widget.currentDay.goal.name),
-                      subtitle: Text(widget.currentDay.goal.target.toString()));
-                } else if (item.name ==
-                    dataInst
-                        .getDay(formatter.format(DateTime.now()))
-                        .goal
-                        .name) {
-                  return ListTile(
+                      leading: const Icon(Icons.lock),
                       title: Text(item.name),
-                      subtitle: Text(item.target.toString()),
-                      onTap: () {
-                        if (dataInst.settings.goalMod) {
-                          widget.currentDay.goal.name = item.name;
-                          widget.currentDay.goal.target = item.target;
-                          dataInst.updateDay(widget.currentDay);
-                          setState(() => this.didChangeDependencies());
-                        } else {
-                          _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                              content: new Text("Goal Modification Disabled")));
-
-                          /* react to the tile being tapped */
-
-                        }
-                      });
-                } else {
+                      subtitle: Text(item.target.toString()));
+                }
+                else {
                   return Dismissible(
                     // Each Dismissible must contain a Key. Keys allow Flutter to
                     // uniquely identify Widgets.
@@ -112,19 +84,6 @@ class _GoalPageState extends State<GoalPage> {
                         title: Text(item.name),
                         subtitle: Text(item.target.toString()),
                         onTap: () {
-                          if (dataInst.settings.goalMod) {
-                            widget.currentDay.goal.name = item.name;
-                            widget.currentDay.goal.target = item.target;
-                            dataInst.updateDay(widget.currentDay);
-                            setState(() => this.didChangeDependencies());
-                          } else {
-                            _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                                content:
-                                    new Text("Goal Modification Disabled")));
-                          }
-                          /* react to the tile being tapped */
-                        },
-                        onLongPress: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -132,7 +91,7 @@ class _GoalPageState extends State<GoalPage> {
                                   title: "Add Goals Page",
                                   name: item.name,
                                   target: item.target,
-                                  enableName: false),
+                                  isEdit: true),
                             ),
                           );
                         }),
@@ -147,9 +106,9 @@ class _GoalPageState extends State<GoalPage> {
             MaterialPageRoute(
               builder: (context) => AddGoalsPage(
                   title: "Add Goals Page",
-                  name: "DEFAULT",
+                  name: "",
                   target: 0,
-                  enableName: true),
+                  isEdit: false),
             ),
           );
         },

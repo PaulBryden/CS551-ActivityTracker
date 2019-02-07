@@ -9,7 +9,7 @@ import 'Days.dart';
 import 'Goal.dart';
 import 'Goals.dart';
 import 'Settings.dart';
-
+import 'DayState.dart';
 class UserData {
 
   static final UserData _singleton = new UserData._internal();
@@ -103,8 +103,9 @@ class UserData {
     print(goals.toString() + days.toString() + settings.toString());
   }
 
-  List<Goal> getGoals() {
-    return new List<Goal>();
+  List<Goal> getGoals()
+  {
+    return goals.goals;
   }
 
   void addGoal(Goal) async {
@@ -122,18 +123,19 @@ class UserData {
     await writeFile("goals");
   }
 
-  void updateGoal(goalVar) async {
+  void updateGoal(var goalVar, var newGoal) async {
     bool found=false;
     for (var eGoal in goals.goals) {
       if (eGoal.name.compareTo(goalVar.name)==0) {
-        eGoal.target = goalVar.target;
         found=true;
+          eGoal.name = newGoal.name;
+          eGoal.target = newGoal.target;
         break;
       }
     }
     if(!found)
       {
-        addGoal(goalVar);
+        addGoal(newGoal);
       }
     await writeFile("goals");
   }
@@ -148,6 +150,17 @@ class UserData {
     await writeFile("days");
   }
 
+  Goal getGoal(String goalName) {
+    Goal goal = null;
+    for (var eGoal in goals.goals) {
+      if (eGoal.name == goalName) {
+        return eGoal;
+      }
+    }
+    return new Goal("No Goal Selected",0);
+  }
+
+
   Day getDay(String datetime) {
     Day day = null;
     for (var eDay in days.days) {
@@ -161,7 +174,7 @@ class UserData {
     }
     else
       {
-      day = new Day(datetime,0,defaultGoal);
+      day = new Day(datetime,0,new Goal("No Goal Selected",0),DayState.NoGoal);
       days.days.add(day);
       writeFile("days");
       return day;
