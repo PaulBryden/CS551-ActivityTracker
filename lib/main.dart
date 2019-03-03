@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-
-import 'ActivityPage.dart';
-import 'UserData.dart';
+import 'package:flutter_app_test/Data/UserData.dart';
+import 'package:flutter_app_test/Pages/ActivityPage.dart';
 import 'package:intl/intl.dart';
 
-void main() =>  test().then((_)=>runApp(MyApp()));
+void main() => test().then((_) => runApp(MyApp()));
 var s1 = new UserData();
 
 Future<int> test() async {
@@ -31,7 +29,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()),title:  'Summary',isHome: true),
+      home: HomePage(datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()), title: 'Summary', isHome: true),
     );
   }
 }

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:date_utils/date_utils.dart';
+import 'package:flutter/material.dart';
 
 class CalendarTile extends StatelessWidget {
   final VoidCallback onDateSelected;
@@ -38,9 +38,9 @@ class CalendarTile extends StatelessWidget {
         child: new Container(
           decoration: isSelected
               ? new BoxDecoration(
-            shape: BoxShape.circle,
-            color: Theme.of(context).primaryColor,
-          )
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).primaryColor,
+                )
               : new BoxDecoration(),
           alignment: Alignment.center,
           child: new Text(

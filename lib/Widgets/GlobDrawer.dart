@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_test/Pages/ActivityPage.dart';
+import 'package:flutter_app_test/Pages/GoalListPage.dart';
+import 'package:flutter_app_test/Pages/HistoryPage.dart';
+import 'package:flutter_app_test/Pages/SettingsPage.dart';
 import 'package:intl/intl.dart';
 
-import 'HistoryPage.dart';
-import 'ActivityPage.dart';
-import 'SettingsPage.dart';
-import 'GoalPage.dart';
-import 'UserData.dart';
 class GlobDrawer extends Drawer {
   GlobDrawer();
 
@@ -20,10 +19,15 @@ class GlobDrawer extends Drawer {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('Activity Tracker',textScaleFactor: 1.5,style: TextStyle(color: Colors.white),),
+            child: Text(
+              'Activity Tracker',
+              textScaleFactor: 1.5,
+              style: TextStyle(color: Colors.white),
+            ),
             decoration: BoxDecoration(
               color: Colors.blue,
-            ),margin: EdgeInsets.all(0),
+            ),
+            margin: EdgeInsets.all(0),
           ),
           ListTile(
             title: Text('Summary'),
@@ -31,7 +35,8 @@ class GlobDrawer extends Drawer {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()),title:  'Summary',isHome: true),
+                  builder: (context) => HomePage(
+                      datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()), title: 'Summary', isHome: true),
                 ),
               );
             },

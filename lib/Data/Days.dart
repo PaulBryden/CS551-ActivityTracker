@@ -1,4 +1,4 @@
-import 'Day.dart';
+import 'package:flutter_app_test/Data/Day.dart';
 
 class Days {
   List<Day> days;

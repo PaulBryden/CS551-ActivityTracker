@@ -1,4 +1,4 @@
-import 'Goal.dart';
+import 'package:flutter_app_test/Data/Goal.dart';
 
 class Goals {
   List<Goal> goals;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'UserData.dart';
-import 'Goal.dart';
+import 'package:flutter_app_test/Data/Goal.dart';
+import 'package:flutter_app_test/Data/UserData.dart';
+
 class AddGoalsPage extends StatefulWidget {
   AddGoalsPage({Key key, this.title, this.name, this.target, this.isEdit}) : super(key: key);
 
@@ -17,27 +18,25 @@ class AddGoalsPage extends StatefulWidget {
   String name;
   int target;
   bool isEdit;
+
   @override
-  _AddGoalsPageState createState() => _AddGoalsPageState(name,target);
-
-
+  _AddGoalsPageState createState() => _AddGoalsPageState(name, target);
 }
 
 class _AddGoalsPageState extends State<AddGoalsPage> {
   var dataInst = new UserData();
   String valString;
   int targetVal;
-  final nameController= TextEditingController();
+  final nameController = TextEditingController();
   final targetController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  _AddGoalsPageState(this.valString,this.targetVal)
-  {
-    nameController.text=(valString);
-    targetController.text=(targetVal.toString());
-  }  //constructor
+
+  _AddGoalsPageState(this.valString, this.targetVal) {
+    nameController.text = (valString);
+    targetController.text = (targetVal.toString());
+  } //constructor
   @override
   Widget build(BuildContext context) {
-
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -63,7 +62,6 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
             TextFormField(
               controller: nameController,
               enabled: true,
-              
               decoration: const InputDecoration(
                 icon: Icon(Icons.text_format),
                 hintText: 'Default Goal',
@@ -73,7 +71,6 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
             TextFormField(
               controller: targetController,
               keyboardType: TextInputType.number,
-
               decoration: const InputDecoration(
                 icon: Icon(Icons.directions_walk),
                 hintText: '1000',
@@ -85,25 +82,33 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Goal goal = new Goal(
-              nameController.text, int.parse(targetController.text));
-          if(widget.isEdit)
-            {
-              if(widget.name!=nameController.text&& dataInst.getGoal(nameController.text).name!="No Goal Selected"){
-                _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                    content: new Text("Another Goal already exists with that name.")));
-              }
-              else {
-                dataInst.updateGoal(
-                    new Goal(widget.name, widget.target), goal);
-                Navigator.pop(context);
-              }
+          try {
+            int.parse(targetController.text);
+          } catch (e) {
+            _scaffoldKey.currentState
+                .showSnackBar(new SnackBar(content: new Text("Please enter a valid, positive step count.")));
+            return;
+          }
+          if (int.parse(targetController.text) < 1) {
+            _scaffoldKey.currentState
+                .showSnackBar(new SnackBar(content: new Text("Please enter a valid, positive step count.")));
+            return;
+          }
+          Goal goal = new Goal(nameController.text, int.parse(targetController.text));
+          if (widget.isEdit) {
+            if (widget.name != nameController.text &&
+                dataInst.getGoal(nameController.text).name != "No Goal Selected") {
+              _scaffoldKey.currentState
+                  .showSnackBar(new SnackBar(content: new Text("Another Goal already exists with that name.")));
+            } else {
+              dataInst.updateGoal(new Goal(widget.name, widget.target), goal);
+              Navigator.pop(context);
             }
-            else{
-            if(dataInst.getGoal(nameController.text).name!="No Goal Selected"){
-              _scaffoldKey.currentState.showSnackBar(new SnackBar(
-                  content: new Text("Goal already exists with that name.")));
-            }else{
+          } else {
+            if (dataInst.getGoal(nameController.text).name != "No Goal Selected") {
+              _scaffoldKey.currentState
+                  .showSnackBar(new SnackBar(content: new Text("Goal already exists with that name.")));
+            } else {
               dataInst.addGoal(goal);
               Navigator.pop(context);
             }
@@ -114,17 +119,13 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
       ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
-
   }
-  void updateName()
-  {
-    widget.name="${nameController.text}";
 
+  void updateName() {
+    widget.name = "${nameController.text}";
   }
-  void updateTarget()
-  {
 
-    widget.target=int.parse("${targetController.text}");
-
+  void updateTarget() {
+    widget.target = int.parse("${targetController.text}");
   }
 }

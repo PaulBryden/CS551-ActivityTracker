@@ -5,18 +5,18 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 import 'Day.dart';
+import 'DayState.dart';
 import 'Days.dart';
 import 'Goal.dart';
 import 'Goals.dart';
 import 'Settings.dart';
-import 'DayState.dart';
-class UserData {
 
+class UserData {
   static final UserData _singleton = new UserData._internal();
-  Goal defaultGoal = new Goal("Default",10000);
+  Goal defaultGoal = new Goal("Default", 10000);
   Goals goals = new Goals([]);
   Days days = new Days([]);
-  Settings settings = new Settings(false, false);
+  Settings settings = new Settings(false, false, false);
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -39,7 +39,6 @@ class UserData {
   }
 
   Future<String> readFile(String filename) async {
-    //final file = await _localFileDays;
     switch (filename) {
       case "goals":
         final file = await _localFileGoals;
@@ -103,8 +102,7 @@ class UserData {
     print(goals.toString() + days.toString() + settings.toString());
   }
 
-  List<Goal> getGoals()
-  {
+  List<Goal> getGoals() {
     return goals.goals;
   }
 
@@ -124,19 +122,18 @@ class UserData {
   }
 
   void updateGoal(var goalVar, var newGoal) async {
-    bool found=false;
+    bool found = false;
     for (var eGoal in goals.goals) {
-      if (eGoal.name.compareTo(goalVar.name)==0) {
-        found=true;
-          eGoal.name = newGoal.name;
-          eGoal.target = newGoal.target;
+      if (eGoal.name.compareTo(goalVar.name) == 0) {
+        found = true;
+        eGoal.name = newGoal.name;
+        eGoal.target = newGoal.target;
         break;
       }
     }
-    if(!found)
-      {
-        addGoal(newGoal);
-      }
+    if (!found) {
+      addGoal(newGoal);
+    }
     await writeFile("goals");
   }
 
@@ -157,9 +154,8 @@ class UserData {
         return eGoal;
       }
     }
-    return new Goal("No Goal Selected",0);
+    return new Goal("No Goal Selected", 0);
   }
-
 
   Day getDay(String datetime) {
     Day day = null;
@@ -171,10 +167,8 @@ class UserData {
     }
     if (day != null) {
       return day;
-    }
-    else
-      {
-      day = new Day(datetime,0,new Goal("No Goal Selected",0),DayState.NoGoal);
+    } else {
+      day = new Day(datetime, 0, new Goal("No Goal Selected", 0), DayState.NoGoal);
       days.days.add(day);
       writeFile("days");
       return day;
