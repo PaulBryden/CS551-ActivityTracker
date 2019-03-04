@@ -124,10 +124,10 @@ class UserData {
   void updateGoal(var goalVar, var newGoal) async {
     bool found = false;
     for (var eGoal in m_goals.m_goals) {
-      if (eGoal.m_name.compareTo(goalVar.m_Name) == 0) {
+      if (eGoal.m_name.compareTo(goalVar.m_name) == 0) {
         found = true;
-        eGoal.m_name = newGoal.m_Name;
-        eGoal.m_target = newGoal.m_Target;
+        eGoal.m_name = newGoal.m_name;
+        eGoal.m_target = newGoal.m_target;
         break;
       }
     }

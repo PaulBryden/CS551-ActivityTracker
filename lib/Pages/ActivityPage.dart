@@ -139,7 +139,8 @@ class _ActivityPageState extends State<ActivityPage> {
     day.m_steps += int.parse(m_textController.text);
     if (((day.m_steps / day.m_goal.m_target) >= 0.5) &&
         !isHalfGoalAchieved &&
-        widget.m_isHome &&
+        !DateTime.parse(widget.m_datetimePage)
+            .isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)) &&
         m_dataPtr.getNotificationModification()) {
       m_notificationWrap.showNotification();
     }

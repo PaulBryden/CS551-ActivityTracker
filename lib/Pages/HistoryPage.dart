@@ -61,13 +61,6 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  void incrementSteps(UserData userData, Day day) {
-    day.m_steps += int.parse(m_textController.text);
-    userData.updateDay(day);
-
-    setState(() => this.didChangeDependencies());
-  }
-
   /// Create one series with sample hard coded data.
   static List<charts.Series<GaugeSegment, String>> _createSampleData(Day currentDay) {
     final data = [
