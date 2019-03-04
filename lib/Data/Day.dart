@@ -1,16 +1,16 @@
 import 'Goal.dart';
 
 class Day {
-  String datetime;
-  int steps;
-  Goal goal;
-  int state;
+  String m_datetime;
+  int m_steps;
+  Goal m_goal;
+  int m_state;
 
-  Day(this.datetime, this.steps, this.goal, this.state);
+  Day(this.m_datetime, this.m_steps, this.m_goal, this.m_state);
 
   factory Day.fromJson(Map<String, dynamic> parsedJson) {
     return new Day(parsedJson['datetime'], parsedJson['steps'], Goal.fromJson(parsedJson['goal']), parsedJson['state']);
   }
 
-  Map<String, dynamic> toJson() => {'datetime': datetime, 'steps': steps, 'goal': goal, 'state': state};
+  Map<String, dynamic> toJson() => {'datetime': m_datetime, 'steps': m_steps, 'goal': m_goal, 'state': m_state};
 }

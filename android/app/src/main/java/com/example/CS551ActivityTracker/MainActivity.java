@@ -1,4 +1,4 @@
-package com.example.flutterapptest;
+package com.example.CS551ActivityTracker;
 
 import android.os.Bundle;
 

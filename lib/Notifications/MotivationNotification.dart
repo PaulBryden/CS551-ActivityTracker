@@ -1,15 +1,15 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class NotificationWrapper {
-  var flutterLocalNotificationsPlugin;
+/*Simple Wrapper Class for Deploy The 50% Notification.*/
+class MotivationNotification {
+  var m_flutterLocalNotificationsPlugin;
 
-  NotificationWrapper() {
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+  MotivationNotification() {
+    m_flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin(); //Initialize notification plugin for iOS and Android
     var initializationSettingsAndroid = new AndroidInitializationSettings('mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    m_flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   showNotification() async {
@@ -18,7 +18,7 @@ class NotificationWrapper {
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     var platformChannelSpecifics =
         new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin
+    await m_flutterLocalNotificationsPlugin
         .show(0, 'Almost There!', 'You are more than half way towards today\'s goal!', platformChannelSpecifics, payload: 'item x');
   }
 }

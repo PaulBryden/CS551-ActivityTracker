@@ -2,38 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_test/Data/Goal.dart';
 import 'package:flutter_app_test/Data/UserData.dart';
 
-class AddGoalsPage extends StatefulWidget {
-  AddGoalsPage({Key key, this.title, this.name, this.target, this.isEdit}) : super(key: key);
+class GoalModificationPage extends StatefulWidget {
+  GoalModificationPage({Key key, this.m_Title, this.m_Name, this.m_Target, this.m_isEdit}) : super(key: key);
+  /*Data to be passed in on page creation for use by widgets on the page*/
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-  String name;
-  int target;
-  bool isEdit;
+  final String m_Title;
+  String m_Name;
+  int m_Target;
+  bool m_isEdit;
 
   @override
-  _AddGoalsPageState createState() => _AddGoalsPageState(name, target);
+  _GoalModificationPageState createState() => _GoalModificationPageState(m_Name, m_Target);
 }
 
-class _AddGoalsPageState extends State<AddGoalsPage> {
-  var dataInst = new UserData();
-  String valString;
-  int targetVal;
-  final nameController = TextEditingController();
-  final targetController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class _GoalModificationPageState extends State<GoalModificationPage> {
+  var m_dataPtr = new UserData();
+  String m_valName;
+  int m_targetVal;
+  final m_nameController = TextEditingController();
+  final m_targetController = TextEditingController();
+  final GlobalKey<ScaffoldState> m_scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  _AddGoalsPageState(this.valString, this.targetVal) {
-    nameController.text = (valString);
-    targetController.text = (targetVal.toString());
+  _GoalModificationPageState(this.m_valName, this.m_targetVal) {
+    m_nameController.text = (m_valName);
+    m_targetController.text = (m_targetVal.toString());
   } //constructor
   @override
   Widget build(BuildContext context) {
@@ -44,11 +36,11 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      key: _scaffoldKey,
+      key: m_scaffoldKey,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.m_Title),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -60,7 +52,7 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
             // The widget.
             //
             TextFormField(
-              controller: nameController,
+              controller: m_nameController,
               enabled: true,
               decoration: const InputDecoration(
                 icon: Icon(Icons.text_format),
@@ -69,7 +61,7 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
               ),
             ),
             TextFormField(
-              controller: targetController,
+              controller: m_targetController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 icon: Icon(Icons.directions_walk),
@@ -83,33 +75,33 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           try {
-            int.parse(targetController.text);
+            int.parse(m_targetController.text);
           } catch (e) {
-            _scaffoldKey.currentState
+            m_scaffoldKey.currentState
                 .showSnackBar(new SnackBar(content: new Text("Please enter a valid, positive step count.")));
             return;
           }
-          if (int.parse(targetController.text) < 1) {
-            _scaffoldKey.currentState
+          if (int.parse(m_targetController.text) < 1) {
+            m_scaffoldKey.currentState
                 .showSnackBar(new SnackBar(content: new Text("Please enter a valid, positive step count.")));
             return;
           }
-          Goal goal = new Goal(nameController.text, int.parse(targetController.text));
-          if (widget.isEdit) {
-            if (widget.name != nameController.text &&
-                dataInst.getGoal(nameController.text).name != "No Goal Selected") {
-              _scaffoldKey.currentState
+          Goal goal = new Goal(m_nameController.text, int.parse(m_targetController.text));
+          if (widget.m_isEdit) {
+            if (widget.m_Name != m_nameController.text &&
+                m_dataPtr.getGoal(m_nameController.text).m_name != "No Goal Selected") {
+              m_scaffoldKey.currentState
                   .showSnackBar(new SnackBar(content: new Text("Another Goal already exists with that name.")));
             } else {
-              dataInst.updateGoal(new Goal(widget.name, widget.target), goal);
+              m_dataPtr.updateGoal(new Goal(widget.m_Name, widget.m_Target), goal);
               Navigator.pop(context);
             }
           } else {
-            if (dataInst.getGoal(nameController.text).name != "No Goal Selected") {
-              _scaffoldKey.currentState
+            if (m_dataPtr.getGoal(m_nameController.text).m_name != "No Goal Selected") {
+              m_scaffoldKey.currentState
                   .showSnackBar(new SnackBar(content: new Text("Goal already exists with that name.")));
             } else {
-              dataInst.addGoal(goal);
+              m_dataPtr.addGoal(goal);
               Navigator.pop(context);
             }
           }
@@ -122,10 +114,10 @@ class _AddGoalsPageState extends State<AddGoalsPage> {
   }
 
   void updateName() {
-    widget.name = "${nameController.text}";
+    widget.m_Name = "${m_nameController.text}";
   }
 
   void updateTarget() {
-    widget.target = int.parse("${targetController.text}");
+    widget.m_Target = int.parse("${m_targetController.text}");
   }
 }

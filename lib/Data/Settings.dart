@@ -1,13 +1,13 @@
 class Settings {
-  bool goalMod;
-  bool historyMod;
-  bool notificationsMod;
-  Settings(this.goalMod, this.historyMod, this.notificationsMod);
+  bool m_goalMod;
+  bool m_historyMod;
+  bool m_notificationsMod;
+  Settings(this.m_goalMod, this.m_historyMod, this.m_notificationsMod);
 
   Settings.fromJson(Map<String, dynamic> json)
-      : goalMod = json['goalMod'],
-        historyMod = json['historyMod'],
-        notificationsMod = json['notificationsMod'];
+      : m_goalMod = json['goalMod'],
+        m_historyMod = json['historyMod'],
+        m_notificationsMod = json['notificationsMod'];
 
-  Map<String, dynamic> toJson() => {'goalMod': goalMod, 'historyMod': historyMod, 'notificationsMod':notificationsMod};
+  Map<String, dynamic> toJson() => {'goalMod': m_goalMod, 'historyMod': m_historyMod, 'notificationsMod':m_notificationsMod};
 }

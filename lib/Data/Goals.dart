@@ -1,16 +1,16 @@
 import 'package:flutter_app_test/Data/Goal.dart';
 
 class Goals {
-  List<Goal> goals;
+  List<Goal> m_goals;
 
-  Goals(this.goals);
+  Goals(this.m_goals);
 
   Goals.fromJson(Map<String, dynamic> json) {
     var list = json['goals'] as List;
 
     List<Goal> goalsList = list.map((i) => Goal.fromJson(i)).toList();
-    goals = goalsList;
+    m_goals = goalsList;
   }
 
-  Map<String, dynamic> toJson() => {'goals': goals};
+  Map<String, dynamic> toJson() => {'goals': m_goals};
 }

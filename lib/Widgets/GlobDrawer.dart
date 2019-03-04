@@ -6,16 +6,12 @@ import 'package:flutter_app_test/Pages/SettingsPage.dart';
 import 'package:intl/intl.dart';
 
 class GlobDrawer extends Drawer {
-  GlobDrawer();
+  GlobDrawer(); /*Default Constructor*/
 
   @override
   Widget build(BuildContext context) {
     return new Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the Drawer if there isn't enough vertical
-      // space to fit everything.
       child: ListView(
-        // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
@@ -29,14 +25,15 @@ class GlobDrawer extends Drawer {
             ),
             margin: EdgeInsets.all(0),
           ),
+          /*Navigate to Summary Page*/
           ListTile(
             title: Text('Summary'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(
-                      datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()), title: 'Summary', isHome: true),
+                  builder: (context) => ActivityPage(
+                      m_datetimePage: DateFormat('yyyy-MM-dd').format(DateTime.now()), m_title: 'Summary', m_isHome: true),
                 ),
               );
             },
@@ -44,13 +41,11 @@ class GlobDrawer extends Drawer {
           ListTile(
             title: Text('History'),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
+              /*Navigate to History Page*/
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HistoryPage(title: "History"),
+                  builder: (context) => HistoryPage(m_title: "History"),
                 ),
               );
             },
@@ -58,13 +53,11 @@ class GlobDrawer extends Drawer {
           ListTile(
             title: Text('Manage Goals'),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
+              /*Navigate to Goals Page*/
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => GoalPage(title: "Manage Goals"),
+                  builder: (context) => GoalListPage(m_title: "Manage Goals"),
                 ),
               );
             },
@@ -72,13 +65,11 @@ class GlobDrawer extends Drawer {
           ListTile(
             title: Text('Settings'),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
+              /*Navigate to Settings Page*/
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingsPage(title: "Settings"),
+                  builder: (context) => SettingsPage(m_title: "Settings"),
                 ),
               );
             },

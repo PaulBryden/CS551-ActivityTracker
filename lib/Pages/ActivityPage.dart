@@ -4,60 +4,48 @@ import 'package:flutter_app_test/Data/Day.dart';
 import 'package:flutter_app_test/Data/DayState.dart';
 import 'package:flutter_app_test/Data/Goal.dart';
 import 'package:flutter_app_test/Data/UserData.dart';
-import 'package:flutter_app_test/Notification/Notification.dart';
+import 'package:flutter_app_test/Notifications/MotivationNotification.dart';
 import 'package:flutter_app_test/Widgets/GaugeChart.dart';
 import 'package:flutter_app_test/Widgets/GlobDrawer.dart';
 import 'package:intl/intl.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title, this.datetimePage, this.isHome}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-  String datetimePage;
-  bool isHome;
+class ActivityPage extends StatefulWidget {
+  ActivityPage({Key key, this.m_title, this.m_datetimePage, this.m_isHome}) : super(key: key);
+  /*Data to be passed in on page creation for use by widgets on the page*/
+  final String m_title;
+  String m_datetimePage;
+  bool m_isHome;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ActivityPageState createState() => _ActivityPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final textController = TextEditingController();
-  var dataInst = new UserData();
-  var now = new DateTime.now();
-  var formatter = new DateFormat('yyyy-MM-dd');
-  Day currentDay;
-  List<Goal> _currGoals;
-  String selectedGoal;
-  List<DropdownMenuItem<String>> _dropDownGoals;
-  NotificationWrapper notificationWrap = new NotificationWrapper();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class _ActivityPageState extends State<ActivityPage> {
+  /*Persistent Variables across rebuilds*/
+  final m_textController = TextEditingController();
+  var m_dataPtr = new UserData();
+  var m_now = new DateTime.now();
+  var m_formatter = new DateFormat('yyyy-MM-dd');
+  Day m_currentDay;
+  List<Goal> m_currGoals;
+  String m_selectedGoal;
+  List<DropdownMenuItem<String>> m_dropDownGoals;
+  MotivationNotification m_notificationWrap = new MotivationNotification();
+  final GlobalKey<ScaffoldState> m_scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    currentDay = dataInst.getDay(widget.datetimePage);
-    selectedGoal = currentDay.goal.name;
-    _dropDownGoals = getDropDownGoals();
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    /*Variables that need to be initialized on every refresh, as data is not static.*/
+    m_currentDay = m_dataPtr.getDay(widget.m_datetimePage);
+    m_selectedGoal = m_currentDay.m_goal.m_name;
+    m_dropDownGoals = getDropDownGoals();
     return new Scaffold(
-      key: _scaffoldKey,
-      drawer: widget.isHome ? GlobDrawer() : new Container(),
-      appBar: !widget.isHome
+      key: m_scaffoldKey,
+      drawer: widget.m_isHome ? GlobDrawer() : new Container(),
+      appBar: !widget.m_isHome
           ? AppBar(
-              title: Text(widget.title),
+              title: Text(widget.m_title),
               leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -65,16 +53,17 @@ class _HomePageState extends State<HomePage> {
                 },
               ))
           : AppBar(
-              title: Text(widget.title),
+              title: Text(widget.m_title),
             ),
       body: ListView(padding: EdgeInsets.all(10), children: <Widget>[
         new Column(children: <Widget>[
-          !DateTime.parse(widget.datetimePage)
+          //If The day is current, provide a dropdown menu, else provide the contents within a fixed Row.
+          !DateTime.parse(widget.m_datetimePage)
                       .isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)) ||
-                  currentDay.state == DayState.NoGoal
-              ? new DropdownButton(value: selectedGoal, items: _dropDownGoals, onChanged: changedDropDownItem)
+                  m_currentDay.m_state == DayState.NoGoal
+              ? new DropdownButton(value: m_selectedGoal, items: m_dropDownGoals, onChanged: changedDropDownItem)
               : new Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                  currentDay.state == DayState.ModifiedGoal
+                  m_currentDay.m_state == DayState.ModifiedGoal
                       ? new Icon(
                           Icons.edit,
                           size: 15,
@@ -84,25 +73,25 @@ class _HomePageState extends State<HomePage> {
                     Icons.golf_course,
                     size: 25,
                   ),
-                  new Text(currentDay.goal.name),
-                  new Text(" - " + currentDay.goal.target.toString() + " Steps")
+                  new Text(m_currentDay.m_goal.m_name),
+                  new Text(" - " + m_currentDay.m_goal.m_target.toString() + " Steps")
                 ])
         ]),
         new Container(
           height: 245,
-          child: currentDay.state != 0
-              ? new GaugeChart(_createSampleData(currentDay), currentDay.steps, currentDay.goal.target, 0,
-                  animate: true)
+          child: m_currentDay.m_state != 0
+              ? new GaugeChart(generateGaugeData(m_currentDay), m_currentDay.m_steps, m_currentDay.m_goal.m_target, 0,
+                  m_animate: true)
               : new Text("Please choose a goal."),
         ),
         new Row(children: <Widget>[
           new Flexible(
               child: new TextFormField(
-            controller: textController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              hintText: currentDay.goal.target.toString(),
-              labelText: "Steps:" + currentDay.steps.toString(),
+              controller: m_textController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+              hintText: m_currentDay.m_goal.m_target.toString(),
+              labelText: "Steps:" + m_currentDay.m_steps.toString(),
             ),
           )),
           new Container(
@@ -114,12 +103,14 @@ class _HomePageState extends State<HomePage> {
                 textColor: Colors.white,
                 splashColor: Colors.blue,
                 onPressed: () {
-                  if (dataInst.settings.historyMod ||
-                      !DateTime.parse(widget.datetimePage)
+                  /*If you're allowed to modify history, or it is today*/
+                  if (m_dataPtr.getHistoryModification() ||
+                      !DateTime.parse(widget.m_datetimePage)
                           .isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day))) {
-                    incrementSteps(dataInst, currentDay);
+                    incrementSteps(m_dataPtr, m_currentDay);
                   } else {
-                    _scaffoldKey.currentState
+                    /*Notify User the date they are trying to modify is in the past*/
+                    m_scaffoldKey.currentState
                         .showSnackBar(new SnackBar(content: new Text("History Modification Disabled")));
                   }
                 },
@@ -130,39 +121,41 @@ class _HomePageState extends State<HomePage> {
     //);
   }
 
+  /*Add steps using input validation and update the backend data source*/
   void incrementSteps(UserData userData, Day day) {
-    bool isHalfGoalAchieved = ((day.steps / day.goal.target) >= 0.5);
+    bool isHalfGoalAchieved = ((day.m_steps / day.m_goal.m_target) >= 0.5);
     try {
-      int.parse(textController.text);
+      int.parse(m_textController.text);
     } catch (e) {
-      _scaffoldKey.currentState
+      m_scaffoldKey.currentState
           .showSnackBar(new SnackBar(content: new Text("Please enter a valid, positive step count.")));
       return;
     }
-    if (int.parse(textController.text) < 1) {
-      _scaffoldKey.currentState
+    if (int.parse(m_textController.text) < 1) {
+      m_scaffoldKey.currentState
           .showSnackBar(new SnackBar(content: new Text("Please enter a valid, positive step count.")));
       return;
     }
-    day.steps += int.parse(textController.text);
-    if (((day.steps / day.goal.target) >= 0.5) && !isHalfGoalAchieved && widget.isHome && dataInst.settings.notificationsMod) {
-      notificationWrap.showNotification();
+    day.m_steps += int.parse(m_textController.text);
+    if (((day.m_steps / day.m_goal.m_target) >= 0.5) &&
+        !isHalfGoalAchieved &&
+        widget.m_isHome &&
+        m_dataPtr.getNotificationModification()) {
+      m_notificationWrap.showNotification();
     }
     userData.updateDay(day);
     FocusScope.of(context).requestFocus(new FocusNode());
-    textController.text = "";
+    m_textController.text = "";
     setState(() => this.didChangeDependencies());
   }
 
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<GaugeSegment, String>> _createSampleData(Day currentDay) {
+  /// Create one series with step data.
+  static List<charts.Series<GaugeSegment, String>> generateGaugeData(Day currentDay) {
     final data = [
-      new GaugeSegment('ToGo', currentDay.steps),
+      new GaugeSegment('ToGo', currentDay.m_steps),
       new GaugeSegment('Complete',
-          (currentDay.goal.target - currentDay.steps) > 0 ? (currentDay.goal.target - currentDay.steps) : 0),
-
+          (currentDay.m_goal.m_target - currentDay.m_steps) > 0 ? (currentDay.m_goal.m_target - currentDay.m_steps) : 0),
     ];
-
     return [
       new charts.Series<GaugeSegment, String>(
         id: 'Segments',
@@ -174,13 +167,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<DropdownMenuItem<String>> getDropDownGoals() {
-    _currGoals = dataInst.getGoals();
+    m_currGoals = m_dataPtr.getGoals();
     List<String> currGoalsNames = new List<String>();
-    if (currentDay.state == DayState.NoGoal) {
-      currGoalsNames.add("No Goal Selected");
-    }
-    for (Goal element in _currGoals) {
-      currGoalsNames.add(element.name);
+    if (m_currentDay.m_state == DayState.NoGoal) {
+      currGoalsNames.add("No Goal Selected"); /*If No Goal Selected, add this "temporary goal" to list */
+    } /*Need to use string types instead of classes due to weird behaviour in Flutter 1.0*/
+    for (Goal element in m_currGoals) {
+      currGoalsNames.add(element.m_name);
     }
     List<DropdownMenuItem<String>> items = new List();
     for (String element in currGoalsNames) {
@@ -192,7 +185,7 @@ class _HomePageState extends State<HomePage> {
               size: 25,
             ),
             new Text(element),
-            new Text(" - " + dataInst.getGoal(element).target.toString() + " Steps")
+            new Text(" - " + m_dataPtr.getGoal(element).m_target.toString() + " Steps")
           ])));
     }
     return items;
@@ -200,12 +193,12 @@ class _HomePageState extends State<HomePage> {
 
   void changedDropDownItem(String selectedGoal) {
     setState(() {
-      currentDay.goal = dataInst.getGoal(selectedGoal);
-      if (currentDay.goal.target != 0) {
-        currentDay.state = currentDay.state == DayState.SelectedGoal || currentDay.state == DayState.ModifiedGoal
+      m_currentDay.m_goal = m_dataPtr.getGoal(selectedGoal);
+      if (m_currentDay.m_goal.m_target != 0) {
+        m_currentDay.m_state = m_currentDay.m_state == DayState.SelectedGoal || m_currentDay.m_state == DayState.ModifiedGoal
             ? DayState.ModifiedGoal
             : DayState.SelectedGoal;
-        dataInst.updateDay(currentDay);
+        m_dataPtr.updateDay(m_currentDay);
       }
     });
   }

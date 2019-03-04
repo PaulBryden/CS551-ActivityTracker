@@ -5,64 +5,65 @@ import 'package:flutter_app_test/Pages/GoalModificationPage.dart';
 import 'package:flutter_app_test/Widgets/GlobDrawer.dart';
 import 'package:intl/intl.dart';
 
-class GoalPage extends StatefulWidget {
-  GoalPage({Key key, this.title}) : super(key: key);
+class GoalListPage extends StatefulWidget {
+  GoalListPage({Key key, this.m_title}) : super(key: key);
+  /*Data to be passed in on page creation for use by widgets on the page*/
 
-  final String title;
-  Day currentDay;
+  final String m_title;
+  Day m_currentDay;
 
   @override
-  _GoalPageState createState() => _GoalPageState();
+  _GoalListPageState createState() => _GoalListPageState();
 }
 
-class _GoalPageState extends State<GoalPage> {
-  var dataInst = new UserData();
-  var formatter = new DateFormat('yyyy-MM-dd');
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class _GoalListPageState extends State<GoalListPage> {
+  var m_dataPtr = new UserData();
+  var m_formatter = new DateFormat('yyyy-MM-dd');
+  final GlobalKey<ScaffoldState> m_ScaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    widget.currentDay = dataInst.getDay(formatter.format(DateTime.now()));
+    widget.m_currentDay = m_dataPtr.getDay(m_formatter.format(DateTime.now()));
     return Scaffold(
-      key: _scaffoldKey,
+      key: m_ScaffoldKey,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.m_title),
       ),
       body: Center(
           child: ListView.builder(
-              itemCount: dataInst.goals.goals.length,
+              itemCount: m_dataPtr.m_goals.m_goals.length,
               itemBuilder: (context, index) {
-                final item = dataInst.goals.goals[index];
-                if (item.name == widget.currentDay.goal.name) {
+                final item = m_dataPtr.m_goals.m_goals[index];
+                if (item.m_name == widget.m_currentDay.m_goal.m_name) {
                   return Ink(
-                      color: new Color.fromARGB(140,Colors.blue.red,Colors.blue.green,Colors.blue.blue),
+                      color: new Color.fromARGB(255,Colors.blue.red,Colors.blue.green,Colors.blue.blue),
                       child: ListTile(
                           leading: const Icon(Icons.golf_course),
-                          title: Text(item.name),
-                          subtitle: Text(item.target.toString())));
-                } else if (!dataInst.settings.goalMod) {
+                          title: Text(item.m_name),
+                          subtitle: Text(item.m_target.toString())));
+                } else if (!m_dataPtr.m_settings.m_goalMod) { /*If Goal Modification is Disabled*/
                   return ListTile(
-                      leading: const Icon(Icons.lock), title: Text(item.name), subtitle: Text(item.target.toString()));
+                      leading: const Icon(Icons.lock), title: Text(item.m_name), subtitle: Text(item.m_target.toString()));
                 } else {
-                  return Dismissible(
-                    key: Key(item.name),
+                  return Dismissible( /*Else allow items to be deleted by swiping*/
+                    key: Key(item.m_name),
                     background: Container(color: Colors.red),
                     onDismissed: (direction) {
                       setState(() {
-                        dataInst.removeGoal(item);
+                        m_dataPtr.removeGoal(item);
                       });
-                      Scaffold.of(context).showSnackBar(SnackBar(content: Text(item.name + " deleted."),duration: new Duration(seconds: 1)));
+                      Scaffold.of(context).showSnackBar(SnackBar(content: Text(item.m_name + " deleted."),duration: new Duration(seconds: 1)));
                     },
                     child: ListTile(
-                        title: Text(item.name),
+                        title: Text(item.m_name),
                         leading: const Icon(Icons.edit),
-                        subtitle: Text(item.target.toString()),
+                        subtitle: Text(item.m_target.toString()),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddGoalsPage(
-                                  title: "Modify Goal", name: item.name, target: item.target, isEdit: true),
+                              builder: (context) => GoalModificationPage(
+                                  m_Title: "Modify Goal", m_Name: item.m_name, m_Target: item.m_target, m_isEdit: true),
                             ),
                           );
                         }),
@@ -75,7 +76,7 @@ class _GoalPageState extends State<GoalPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddGoalsPage(title: "Add Goal", name: "", target: 0, isEdit: false),
+              builder: (context) => GoalModificationPage(m_Title: "Add Goal", m_Name: "", m_Target: 0, m_isEdit: false),
             ),
           );
         },
