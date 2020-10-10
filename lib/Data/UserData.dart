@@ -113,7 +113,7 @@ class UserData {
 
   void removeGoal(goalVar) async {
     for (var eGoal in m_goals.m_goals) {
-      if (eGoal.m_name == goalVar.m_Name) {
+      if (eGoal.m_name == goalVar.m_name) {
         m_goals.m_goals.remove(eGoal);
         break;
       }
